@@ -1,991 +1,358 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Installation Guide - Brewtendo</title>
-    <link rel="icon" type="image/png" href="https://files.catbox.moe/1i8mb4.png">
-    <style>
-        /* Primary Rodin (regular) */
-        @font-face {
-            font-family: 'Rodin';
-            src: url('https://files.catbox.moe/t49ue8.otf') format('opentype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        /* Bold Rodin (user-supplied) */
-        @font-face {
-            font-family: 'RodinBold';
-            src: url('https://files.catbox.moe/6iytdd.otf') format('opentype');
-            font-weight: 700;
-            font-style: normal;
-            font-display: swap;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Rodin', Arial, sans-serif;
-            background: linear-gradient(to bottom, #fff8e8 0%, #ffeed9 10%, #ffe4b8 20%, #ffd89a 30%, #ffcc7a 40%, #ffc05a 50%, #ffb445 60%, #ffa830 70%, #ff9c1f 80%, #ff9010 90%, #ff8500 100%);
-            min-height: 100vh;
-        }
-
-        * {
-            font-family: 'Rodin', Arial, sans-serif;
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.5);
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            z-index: 999;
-        }
-
-        .sidebar-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .sidebar {
-            position: fixed;
-            left: -360px;
-            top: 0;
-            width: 360px;
-            height: 100vh;
-            background: linear-gradient(to bottom, #ff9944 0%, #ff8833 100%);
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
-            transition: left 0.3s ease;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .sidebar.open {
-            left: 0;
-        }
-
-        .sidebar-header {
-            padding: 30px 25px;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .sidebar-logo {
-            width: 50px;
-            height: 50px;
-        }
-
-        .sidebar-title {
-            color: white;
-            font-size: 28px;
-            font-weight: bold;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-        }
-
-        .sidebar-section {
-            padding: 5px 0;
-        }
-
-        .sidebar-section-title {
-            padding: 15px 25px 10px;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .sidebar-item {
-            padding: 18px 25px;
-            color: white;
-            text-decoration: none;
-            display: block;
-            font-size: 17px;
-            transition: background 0.2s ease;
-            border-left: 4px solid transparent;
-        }
-
-        .sidebar-item:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-left-color: white;
-        }
-
-        .top-bar {
-            background: linear-gradient(to bottom, #ff9944 0%, #ff8833 100%);
-            padding: 7px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        .menu-btn {
-            background: linear-gradient(to bottom, #ffaa55 0%, #ff8822 100%);
-            border: 2px solid rgba(255, 255, 255, 0.35);
-            border-bottom-color: rgba(0, 0, 0, 0.15);
-            padding: 5px 12px 5px 10px;
-            border-radius: 20px;
-            color: white;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-            position: absolute;
-            left: 8px;
-            transition: transform 0.1s ease;
-        }
-
-        .menu-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .menu-btn:active {
-            transform: translateY(0);
-        }
-
-        .menu-icon {
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
-            position: relative;
-        }
-
-        .menu-icon svg {
-            width: 12px;
-            height: 12px;
-        }
-
-        .menu-icon line {
-            stroke: #ff7722;
-            stroke-width: 3;
-            stroke-linecap: round;
-        }
-
-        .search-bar {
-            max-width: 350px;
-            width: 350px;
-            padding: 6px 12px;
-            border: 2px solid #cc6600;
-            border-radius: 10px;
-            font-size: 13px;
-            font-family: 'CustomFont', Arial, sans-serif;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-bar:focus {
-            outline: none;
-            border-color: #ff7722;
-        }
-
-        .search-btn {
-            background: linear-gradient(to bottom, #ffbb77 0%, #ff9944 100%);
-            border: none;
-            padding: 0;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.1s ease;
-        }
-
-        .search-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .search-btn:active {
-            transform: translateY(0);
-        }
-
-        .search-icon {
-            width: 17px;
-            height: 17px;
-            fill: white;
-            filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.3));
-        }
-
-        .language-btn {
-            background: linear-gradient(to bottom, #ffaa55 0%, #ff8822 100%);
-            border: 2px solid rgba(255, 255, 255, 0.35);
-            border-bottom-color: rgba(0, 0, 0, 0.15);
-            padding: 5px 12px;
-            border-radius: 20px;
-            color: white;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-            position: absolute;
-            right: 8px;
-            transition: transform 0.1s ease;
-        }
-
-        .language-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .language-btn:active {
-            transform: translateY(0);
-        }
-
-        .language-icon {
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
-        }
-
-        .language-icon svg {
-            width: 14px;
-            height: 14px;
-            fill: #ff7722;
-        }
-
-        .language-dropdown {
-            position: absolute;
-            right: 8px;
-            top: 50px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            display: none;
-            z-index: 1001;
-            min-width: 150px;
-        }
-
-        .language-dropdown.show {
-            display: block;
-        }
-
-        .language-option {
-            padding: 12px 20px;
-            color: #555;
-            cursor: pointer;
-            transition: background 0.2s ease;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .language-option:hover {
-            background: #fff5e6;
-            color: #ff6600;
-        }
-
-        .language-option.active {
-            background: #ff6600;
-            color: white;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 30px 20px;
-        }
-
-        .page-header {
-            background: linear-gradient(to bottom, #ffffff 0%, #fff8f0 100%);
-            border-radius: 16px;
-            padding: 35px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            border: 3px solid rgba(255, 255, 255, 0.8);
-            text-align: center;
-        }
-
-        /* Use bold Rodin for the main page title */
-        .page-header h1 {
-            color: #ff6600;
-            font-size: 32px;
-            margin-bottom: 12px;
-            font-weight: 700;
-            font-family: 'RodinBold', 'Rodin', Arial, sans-serif;
-            text-shadow: 0 2px 4px rgba(255, 102, 0, 0.2);
-        }
-
-        .page-header p {
-            color: #666;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        .warning-box {
-            background: linear-gradient(135deg, #ffcc00 0%, #ff9900 100%);
-            border-radius: 14px;
-            padding: 20px 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-        }
-
-        .warning-icon {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .warning-icon svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .warning-content {
-            color: white;
-        }
-
-        /* Use bold Rodin for Important Notice */
-        .warning-content h3 {
-            font-size: 16px;
-            margin-bottom: 6px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            font-family: 'RodinBold', 'Rodin', Arial, sans-serif;
-            font-weight: 700;
-        }
-
-        .warning-content p {
-            font-size: 14px;
-            opacity: 0.95;
-            line-height: 1.5;
-        }
-
-        .guide-section {
-            background: rgba(255, 255, 255, 0.35);
-            border-radius: 14px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-
-        /* Section title container */
-        .section-title {
-            color: #8b4500;
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            /* Use bold Rodin for step titles (the visible text after the number) */
-            font-family: 'RodinBold', 'Rodin', Arial, sans-serif;
-        }
-
-        .section-number {
-            background: #ff6600;
-            color: white;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: bold;
-            flex-shrink: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .step-content {
-            background: linear-gradient(to bottom, #ffffff 0%, #fff9f2 100%);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            border: 2px solid #ffb84d;
-        }
-
-        .step-content:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Use bold Rodin for each step subtitle heading */
-        .step-content h4 {
-            color: #ff6600;
-            font-size: 16px;
-            margin-bottom: 10px;
-            font-weight: 700;
-            font-family: 'RodinBold', 'Rodin', Arial, sans-serif;
-        }
-
-        .step-content p {
-            color: #555;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
-
-        .step-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        .step-content ul {
-            margin: 10px 0;
-            padding-left: 25px;
-            color: #555;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .step-content li {
-            margin-bottom: 8px;
-        }
-
-        .code-block {
-            background: #2d2d2d;
-            color: #f8f8f8;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: 'CustomFont', 'Courier New', monospace;
-            font-size: 13px;
-            overflow-x: auto;
-            margin: 10px 0;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .tip-box {
-            background: linear-gradient(135deg, #4a9eff 0%, #0066cc 100%);
-            border-radius: 12px;
-            padding: 15px 20px;
-            margin: 15px 0;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .tip-icon {
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .tip-icon svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .tip-content {
-            color: white;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .next-steps {
-            background: linear-gradient(to bottom, #ff9933 0%, #ff6600 100%);
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            margin-top: 25px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* Keep the next steps heading bold and consistent */
-        .next-steps h2 {
-            color: white;
-            font-size: 26px;
-            margin-bottom: 10px;
-            font-weight: 700;
-            font-family: 'RodinBold', 'Rodin', Arial, sans-serif;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .next-steps p {
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 15px;
-            margin-bottom: 20px;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            background: linear-gradient(to bottom, #ffffff 0%, #fff8f0 100%);
-            color: #ff6600;
-            padding: 12px 30px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: bold;
-            display: inline-block;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
-            transition: transform 0.12s ease;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.35);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 25px 20px;
-            color: #8b4500;
-            font-size: 13px;
-        }
-
-        .footer-links {
-            margin-top: 12px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .footer a {
-            color: #ff6600;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.2s ease;
-        }
-
-        .footer a:hover {
-            color: #ff8833;
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .search-bar {
-                max-width: 250px;
-                width: 250px;
-            }
-
-            .page-header h1 {
-                font-size: 26px;
-            }
-
-            .section-title {
-                font-size: 18px;
-            }
-
-            .btn-group {
-                flex-direction: column;
-            }
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Installation Guide - Brewtendo</title>
+<link rel="icon" type="image/png" href="https://files.catbox.moe/1i8mb4.png">
+<style>
+/* Fonts */
+@font-face {
+    font-family: 'Rodin';
+    src: url('https://files.catbox.moe/t49ue8.otf') format('opentype');
+    font-display: swap;
+}
+@font-face {
+    font-family: 'RodinBold';
+    src: url('https://files.catbox.moe/6iytdd.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Reset & body */
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+    font-family:'Rodin', Arial, sans-serif;
+    background: linear-gradient(to bottom,#fff8e8 0%,#ffeed9 10%,#ffe4b8 20%,#ffd89a 30%,#ffcc7a 40%,#ffc05a 50%,#ffb445 60%,#ffa830 70%,#ff9c1f 80%,#ff9010 90%,#ff8500 100%);
+    min-height:100vh;
+    color:#333;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+}
+
+/* Top bar (sidebar contents moved here) */
+.top-bar{
+    background: linear-gradient(to bottom,#ff9944 0%,#ff8833 100%);
+    padding:8px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+    position:sticky;
+    top:0;
+    z-index:1000;
+}
+.top-left{display:flex;align-items:center;gap:12px}
+.top-logo{width:44px;height:44px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.2)}
+.brand{color:white;font-family:'RodinBold','Rodin',Arial,sans-serif;font-weight:700;font-size:18px;text-shadow:0 1px 2px rgba(0,0,0,0.25)}
+
+.nav-links{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:white;text-decoration:none;font-weight:700;padding:8px 12px;border-radius:10px;transition:background .15s ease,transform .12s ease;font-family:'RodinBold','Rodin',Arial,sans-serif}
+.nav-links a:hover{background:rgba(255,255,255,0.12);transform:translateY(-2px)}
+
+/* Language button (no icon) */
+.language-btn{
+    background: linear-gradient(to bottom,#ffaa55 0%,#ff8822 100%);
+    border:2px solid rgba(255,255,255,0.35);
+    border-bottom-color: rgba(0,0,0,0.15);
+    padding:6px 12px;
+    border-radius:20px;
+    color:white;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 2px 5px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.25);
+    display:inline-flex;align-items:center;gap:8px;text-shadow:0 1px 2px rgba(0,0,0,0.3);
+    transition:transform .12s ease,box-shadow .12s ease;
+    font-family:'RodinBold','Rodin',Arial,sans-serif;
+}
+.language-btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,0.28)}
+
+/* Dropdown with emoji flags */
+.language-dropdown{
+    position:absolute;
+    right:12px;
+    top:58px;
+    background:white;
+    border-radius:12px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.15);
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(-6px) scale(.98);
+    transform-origin:top right;
+    transition:opacity 180ms ease, transform 180ms cubic-bezier(.2,.9,.2,1);
+    z-index:1001;
+    min-width:180px;
+    pointer-events:none;
+}
+.language-dropdown.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.language-option{
+    display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:14px;font-weight:700;color:#444;cursor:pointer;
+}
+.language-option:hover{background:#fff5e6;color:#ff6600}
+.language-emoji{
+    font-size:20px; /* emoji flag size */
+    line-height:1;
+}
+
+/* Page container & content */
+.container{max-width:900px;margin:0 auto;padding:30px 20px}
+.page-header{background:linear-gradient(to bottom,#ffffff 0%,#fff8f0 100%);border-radius:16px;padding:35px;margin-bottom:25px;box-shadow:0 4px 10px rgba(0,0,0,0.15);border:3px solid rgba(255,255,255,0.8);text-align:center}
+.page-header h1{color:#ff6600;font-size:32px;margin-bottom:12px;font-weight:700;font-family:'RodinBold','Rodin',Arial,sans-serif;text-shadow:0 2px 4px rgba(255,102,0,0.2)}
+.page-header p{color:#666;font-size:16px;line-height:1.6}
+
+/* Warning box - fix SVG size */
+.warning-box{background:linear-gradient(135deg,#ffcc00 0%,#ff9900 100%);border-radius:14px;padding:14px 20px;margin-bottom:25px;box-shadow:0 3px 8px rgba(0,0,0,0.15);border:3px solid rgba(255,255,255,0.3);display:flex;align-items:center;gap:12px}
+.warning-icon{width:32px;height:32px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+.warning-icon svg{width:20px;height:20px;display:block}
+.warning-content{color:white}
+.warning-content h3{font-size:16px;margin-bottom:6px;text-shadow:0 1px 2px rgba(0,0,0,0.2);font-family:'RodinBold','Rodin',Arial,sans-serif;font-weight:700}
+.warning-content p{font-size:14px;opacity:0.95;line-height:1.5}
+
+/* Guide sections */
+.guide-section{background:rgba(255,255,255,0.35);border-radius:14px;padding:25px;margin-bottom:20px;box-shadow:0 2px 6px rgba(0,0,0,0.1);border:2px solid rgba(255,255,255,0.5)}
+.section-title{color:#8b4500;font-size:22px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-family:'RodinBold','Rodin',Arial,sans-serif}
+.section-number{background:#ff6600;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+.step-content{background:linear-gradient(to bottom,#ffffff 0%,#fff9f2 100%);border-radius:12px;padding:20px;margin-bottom:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);border:2px solid #ffb84d}
+.step-content h4{color:#ff6600;font-size:16px;margin-bottom:10px;font-weight:700;font-family:'RodinBold','Rodin',Arial,sans-serif}
+.step-content p{color:#555;font-size:14px;line-height:1.6;margin-bottom:10px}
+.step-content ul{margin:10px 0;padding-left:25px;color:#555;font-size:14px;line-height:1.6}
+.code-block{background:#2d2d2d;color:#f8f8f8;padding:15px;border-radius:8px;font-family:'Courier New',monospace;font-size:13px;overflow-x:auto;margin:10px 0;box-shadow:inset 0 2px 4px rgba(0,0,0,0.3)}
+.tip-box{background:linear-gradient(135deg,#4a9eff 0%,#0066cc 100%);border-radius:12px;padding:15px 20px;margin:15px 0;box-shadow:0 2px 6px rgba(0,0,0,0.15);border:2px solid rgba(255,255,255,0.3);display:flex;align-items:flex-start;gap:12px}
+.tip-content{color:white;font-size:14px;line-height:1.5}
+
+/* Next steps / "You're all set!" - match provided image */
+.next-steps{
+    background: linear-gradient(180deg, #ffb277 0%, #ff8b1a 30%, #ff6b00 100%);
+    border-radius: 14px;
+    padding: 42px 28px;
+    text-align:center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12), inset 0 2px 0 rgba(255,255,255,0.15);
+    margin-top:25px;
+    border: 4px solid rgba(255, 255, 255, 0.35);
+    position: relative;
+}
+.next-steps h2{
+    color: white;
+    font-size: 34px;
+    margin: 0 0 14px 0;
+    font-weight: 700;
+    font-family:'RodinBold','Rodin',Arial,sans-serif;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.18);
+}
+.next-steps p{
+    color: rgba(255,255,255,0.95);
+    font-size: 16px;
+    margin: 0 0 26px 0;
+    font-weight: 700;
+}
+
+/* Big pill buttons that match image */
+.btn-group{display:flex;gap:28px;justify-content:center;flex-wrap:wrap}
+.btn{
+    background: #ffffff;
+    color: #ff6600;
+    padding: 16px 36px;
+    border-radius: 40px;
+    text-decoration:none;
+    font-size:16px;
+    font-weight:700;
+    display:inline-block;
+    box-shadow: 0 10px 18px rgba(0,0,0,0.18);
+    border: 1px solid rgba(255,255,255,0.6);
+    transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn:hover{transform:translateY(-4px);box-shadow:0 16px 26px rgba(0,0,0,0.2)}
+.btn:active{transform:translateY(-2px)}
+
+/* Footer */
+.footer{text-align:center;padding:25px 20px;color:#8b4500;font-size:13px}
+.footer a{color:#ff6600;text-decoration:none;font-weight:700;transition:color .2s ease}
+.footer a:hover{color:#ff8833;text-decoration:underline}
+
+/* Responsive tweaks */
+@media (max-width:720px){
+    .nav-links{display:none}
+    .next-steps h2{font-size:26px}
+    .btn{padding:12px 22px;font-size:15px}
+}
+</style>
 </head>
 <body>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="https://files.catbox.moe/1i8mb4.png" alt="Brewtendo" class="sidebar-logo">
-            <div class="sidebar-title">Brewtendo</div>
-        </div>
-        
-        <div class="sidebar-section">
-            <div class="sidebar-section-title" id="sidebarNavTitle">Navigation</div>
-            <a href="https://brewtendo.github.io" class="sidebar-item" id="sidebarHome">Home</a>
-            <a href="https://brewtendo.github.io/guide" class="sidebar-item" id="sidebarGuide">Installation Guide</a>
-            <a href="https://brewtendo.github.io/support" class="sidebar-item" id="sidebarSupport">Support</a>
-        </div>
+<!-- Top bar -->
+<div class="top-bar">
+  <div class="top-left">
+    <img src="https://files.catbox.moe/1i8mb4.png" class="top-logo" alt="Brewtendo logo">
+    <div class="brand">Brewtendo</div>
+  </div>
 
-        <div class="sidebar-section">
-            <div class="sidebar-section-title" id="sidebarResourcesTitle">Resources</div>
-            <a href="https://github.com/Brewtendo/brewtendo.github.io" class="sidebar-item" id="sidebarGithub">GitHub Repository</a>
-            <a href="#" class="sidebar-item" id="sidebarFaq">FAQ</a>
-        </div>
+  <nav class="nav-links" aria-label="Main navigation">
+    <a id="sidebarHome" href="https://brewtendo.github.io">Home</a>
+    <a id="sidebarGuide" href="https://brewtendo.github.io/guide">Installation Guide</a>
+    <a id="sidebarSupport" href="https://brewtendo.github.io/support">Support</a>
+    <a id="sidebarGithub" href="https://github.com/Brewtendo/brewtendo.github.io">GitHub Repository</a>
+    <a id="sidebarFaq" href="#">FAQ</a>
+  </nav>
+
+  <div style="position:relative;">
+    <button class="language-btn" id="languageBtn" aria-expanded="false" aria-controls="languageDropdown">
+      <span id="languageText">Language</span>
+    </button>
+
+    <div class="language-dropdown" id="languageDropdown" role="menu" aria-hidden="true">
+      <div class="language-option active" data-lang="en" role="menuitem"><span class="language-emoji">🇺🇸</span>English</div>
+      <div class="language-option" data-lang="es" role="menuitem"><span class="language-emoji">🇪🇸</span>Español</div>
     </div>
+  </div>
+</div>
 
-    <div class="top-bar">
-        <button class="menu-btn" id="menuBtn">
-            <div class="menu-icon">
-                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="2" y1="4" x2="14" y2="4"/>
-                    <line x1="2" y1="8" x2="14" y2="8"/>
-                    <line x1="2" y1="12" x2="14" y2="12"/>
-                </svg>
-            </div>
-            <span id="menuText">Menu</span>
-        </button>
-        <input type="text" class="search-bar" id="searchBar" placeholder="Search">
-        <button class="search-btn">
-            <svg class="search-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
-        </button>
-        <button class="language-btn" id="languageBtn">
-            <div class="language-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
-                </svg>
-            </div>
-            <span id="languageText">Language</span>
-        </button>
-        <div class="language-dropdown" id="languageDropdown">
-            <div class="language-option active" data-lang="en">English</div>
-            <div class="language-option" data-lang="es">Español</div>
-        </div>
+<!-- Page content -->
+<div class="container">
+  <div class="page-header">
+    <h1 id="pageTitle">Installation Guide</h1>
+    <p id="pageSubtitle">Get your 3DS back online in about 10 minutes. No experience needed.</p>
+  </div>
+
+  <div class="warning-box">
+    <div class="warning-icon" aria-hidden="true">
+      <!-- smaller SVG icon -->
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#ff9900" aria-hidden="true"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
     </div>
+    <div class="warning-content">
+      <h3 id="warningTitle">Important Notice</h3>
+      <p id="warningText">Brewtendo is not affiliated with WiiMart, or Nintendo. This is a fan-ran project, and we do not have connections with Nintendo. Make sure to disconnect from Pretendo as well in order for Brewtendo to work. This guide will be updated if any new information or changes come.</p>
+    </div>
+  </div>
 
-    <div class="container">
-        <div class="page-header">
-            <h1 id="pageTitle">Installation Guide</h1>
-            <p id="pageSubtitle">Get your 3DS back online in about 10 minutes. No experience needed.</p>
-        </div>
+  <!-- Steps -->
+  <div class="guide-section">
+    <h2 class="section-title"><span class="section-number">1</span><span id="step1Title">Homebrew your 3DS</span></h2>
+    <div class="step-content">
+      <h4 id="step1Subtitle">Install Custom Firmware</h4>
+      <p id="step1Text">If you haven't already, go to <a href="https://3ds.hacks.guide/" target="_blank" style="color:#ff6600;font-weight:700;text-decoration:underline">https://3ds.hacks.guide/</a> <span id="step1Text2">and follow the full guide to homebrew your 3DS. This is crucial, as without it, this mod will NOT work.</span></p>
+    </div>
+  </div>
 
-        <div class="warning-box">
-            <div class="warning-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" fill="#ff9900"/>
-                </svg>
-            </div>
-            <div class="warning-content">
-                <h3 id="warningTitle">Important Notice</h3>
-                <p id="warningText">Brewtendo is not affiliated with WiiMart, or Nintendo. This is a fan-ran project, and we do not have connections with Nintendo. Make sure to disconnect from Pretendo as well in order for Brewtendo to work. This guide will be updated if any new information or changes come.</p>
-            </div>
-        </div>
+  <div class="guide-section">
+    <h2 class="section-title"><span class="section-number">2</span><span id="step2Title">Open Luma3DS Settings</span></h2>
+    <div class="step-content">
+      <h4 id="step2Subtitle">Configure Luma3DS</h4>
+      <p id="step2Text1">Turn off your console if not already.</p>
+      <p id="step2Text2">Hold select and power it on.</p>
+      <p id="step2Text3">Once you do that, enable these two options:</p>
+      <ul>
+        <li id="step2Option1">"Enable game patching"</li>
+        <li id="step2Option2">"Enable loading external firms and modules"</li>
+      </ul>
+      <p id="step2Text4">Once you do that, save and reboot.</p>
+    </div>
+  </div>
 
-        <div class="guide-section">
-            <h2 class="section-title">
-                <span class="section-number">1</span>
-                <span id="step1Title">Homebrew your 3DS</span>
-            </h2>
-            <div class="step-content">
-                <h4 id="step1Subtitle">Install Custom Firmware</h4>
-                <p id="step1Text">If you haven't already, go to <a href="https://3ds.hacks.guide/" target="_blank" style="color: #ff6600; font-weight: bold; text-decoration: underline;">https://3ds.hacks.guide/</a> <span id="step1Text2">and follow the full guide to homebrew your 3DS. This is crucial, as without it, this mod will NOT work.</span></p>
-            </div>
-        </div>
+  <div class="guide-section">
+    <h2 class="section-title"><span class="section-number">3</span><span id="step3Title">Get the IPS File</span></h2>
+    <div class="step-content">
+      <h4 id="step3Subtitle">Download the patch</h4>
+      <p id="step3Text">Download the IPS file that's attached below, as well as refer to the connection guide.</p>
+    </div>
+  </div>
 
-        <div class="guide-section">
-            <h2 class="section-title">
-                <span class="section-number">2</span>
-                <span id="step2Title">Open Luma3DS Settings</span>
-            </h2>
-            <div class="step-content">
-                <h4 id="step2Subtitle">Configure Luma3DS</h4>
-                <p id="step2Text1">Turn off your console if not already.</p>
-                <p id="step2Text2">Hold select and power it on.</p>
-                <p id="step2Text3">Once you do that, enable these two options:</p>
-                <ul>
-                    <li id="step2Option1">"Enable game patching"</li>
-                    <li id="step2Option2">"Enable loading external firms and modules"</li>
-                </ul>
-                <p id="step2Text4">Once you do that, save and reboot.</p>
-            </div>
-        </div>
+  <div class="guide-section">
+    <h2 class="section-title"><span class="section-number">4</span><span id="step4Title">Copy the IPS file</span></h2>
+    <div class="step-content">
+      <h4 id="step4Subtitle">Install to SD Card</h4>
+      <p id="step4Text1">Take out your 3DS SD Card and plug it into your PC.</p>
+      <p id="step4Text2">Go to this path:</p>
+      <div class="code-block">SD:\luma\sysmodules\</div>
+      <p id="step4Text3">Copy the .ips file here into that folder.</p>
+      <p id="step4Text4">If it asks to replace any files, make sure to click Replace.</p>
+      <div class="tip-box">
+        <div class="tip-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#0066cc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+        <div class="tip-content" id="step4Tip">If you don't have a sysmodules folder, create one inside the luma folder.</div>
+      </div>
+    </div>
+  </div>
 
-        <div class="guide-section">
-            <h2 class="section-title">
-                <span class="section-number">3</span>
-                <span id="step3Title">Get the IPS File</span>
-            </h2>
-            <div class="step-content">
-                <h4 id="step3Subtitle">Download the patch</h4>
-                <p id="step3Text">Download the IPS file that's attached below, as well as refer to the connection guide.</p>
-            </div>
-        </div>
-
-        <div class="guide-section">
-            <h2 class="section-title">
-                <span class="section-number">4</span>
-                <span id="step4Title">Copy the IPS file</span>
-            </h2>
-            <div class="step-content">
-                <h4 id="step4Subtitle">Install to SD Card</h4>
-                <p id="step4Text1">Take out your 3DS SD Card and plug it into your PC.</p>
-                <p id="step4Text2">Go to this path:</p>
-                <div class="code-block">SD:\luma\sysmodules\</div>
-                <p id="step4Text3">Copy the .ips file here into that folder.</p>
-                <p id="step4Text4">If it asks to replace any files, make sure to click Replace.</p>
-                <div class="tip-box">
-                    <div class="tip-icon">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#0066cc">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                        </svg>
-                    </div>
-                    <div class="tip-content" id="step4Tip">If you don't have a sysmodules folder, create one inside the luma folder.</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="guide-section">
-            <h2 class="section-title">
-                <span class="section-number">5</span>
-                <span id="step5Title">Set up the proxy</span>
-            </h2>
-            <div class="step-content">
-                <h4 id="step5Subtitle">Configure Network Settings</h4>
-                <p id="step5Text1">Put the SD Card back into your 3DS.</p>
-                <p id="step5Text2">Turn on your system. It should be on the HOME Menu. If so, navigate to and open System Settings → Internet Settings → Connection Settings.</p>
-                <p id="step5Text3">Select your active connection, then hit Change Settings.</p>
-                <p id="step5Text4">Scroll until you find Proxy Settings.</p>
-                <p id="step5Text5">Choose Yes, then select Detailed Setup.</p>
-                <p id="step5Text6">Enter the Proxy Server into the Proxy Server spot, and enter the Port in the Port spot.</p>
-                <div class="code-block">Proxy Server: 66.65.72.148
+  <div class="guide-section">
+    <h2 class="section-title"><span class="section-number">5</span><span id="step5Title">Set up the proxy</span></h2>
+    <div class="step-content">
+      <h4 id="step5Subtitle">Configure Network Settings</h4>
+      <p id="step5Text1">Put the SD Card back into your 3DS.</p>
+      <p id="step5Text2">Turn on your system. It should be on the HOME Menu. If so, navigate to and open System Settings → Internet Settings → Connection Settings.</p>
+      <p id="step5Text3">Select your active connection, then hit Change Settings.</p>
+      <p id="step5Text4">Scroll until you find Proxy Settings.</p>
+      <p id="step5Text5">Choose Yes, then select Detailed Setup.</p>
+      <p id="step5Text6">Enter the Proxy Server into the Proxy Server spot, and enter the Port in the Port spot.</p>
+      <div class="code-block">Proxy Server: 66.65.72.148
 Port: 8888</div>
-                <p id="step5Text7">Click OK → Save Settings → Test Connection.</p>
-                <p id="step5Text8">If it says the connection test was successful, you're good to go.</p>
-            </div>
-        </div>
-
-        <div class="guide-section">
-            <h2 class="section-title">
-                <span class="section-number">6</span>
-                <span id="step6Title">Done!</span>
-            </h2>
-            <div class="step-content">
-                <h4 id="step6Subtitle">Connect to Brewtendo</h4>
-                <p id="step6Text">If it's successful, you should be good! Now just exit System Settings, navigate to "Nintendo eShop" on your HOME Menu, and launch it. If it loads and you see the original categories, and games on sale, then congratulations, you are now logged into the Brewtendo servers! We can't wait to have you!</p>
-            </div>
-        </div>
-
-        <div class="next-steps">
-            <h2 id="nextStepsTitle">You're all set!</h2>
-            <p id="nextStepsText">Your 3DS is back online. Time to catch up on what you missed.</p>
-            <div class="btn-group">
-                <a href="https://brewtendo.github.io" class="btn" id="homeBtn">Back to Home</a>
-                <a href="https://brewtendo.github.io/support" class="btn" id="supportBtn">Get Support</a>
-            </div>
-        </div>
+      <p id="step5Text7">Click OK → Save Settings → Test Connection.</p>
+      <p id="step5Text8">If it says the connection test was successful, you're good to go.</p>
     </div>
+  </div>
 
-    <div class="footer">
-        <p id="footerText">Brewtendo is a fan project. Not affiliated with Nintendo. Just some people who miss the 3DS.</p>
-        <div class="footer-links">
-            <a href="https://github.com/Brewtendo/brewtendo.github.io" id="footerGithub">GitHub</a>
-            <a href="#" id="footerPrivacy">Privacy</a>
-            <a href="#" id="footerTerms">Terms</a>
-        </div>
+  <div class="guide-section">
+    <h2 class="section-title"><span class="section-number">6</span><span id="step6Title">Done!</span></h2>
+    <div class="step-content">
+      <h4 id="step6Subtitle">Connect to Brewtendo</h4>
+      <p id="step6Text">If it's successful, you should be good! Now just exit System Settings, navigate to "Nintendo eShop" on your HOME Menu, and launch it. If it loads and you see the original categories, and games on sale, then congratulations, you are now logged into the Brewtendo servers! We can't wait to have you!</p>
     </div>
+  </div>
 
-    <script>
-        const menuBtn = document.getElementById('menuBtn');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
-        const languageBtn = document.getElementById('languageBtn');
-        const languageDropdown = document.getElementById('languageDropdown');
+  <!-- Next steps "You're all set!" -->
+  <div class="next-steps" role="region" aria-labelledby="nextStepsTitle">
+    <h2 id="nextStepsTitle">You're all set!</h2>
+    <p id="nextStepsText">Your 3DS is back online. Time to catch up on what you missed.</p>
+    <div class="btn-group">
+      <a class="btn" id="homeBtn" href="https://brewtendo.github.io">Back to Home</a>
+      <a class="btn" id="supportBtn" href="https://brewtendo.github.io/support">Get Support</a>
+    </div>
+  </div>
+</div>
 
-        menuBtn.addEventListener('click', () => {
-            sidebar.classList.add('open');
-            sidebarOverlay.classList.add('open');
-        });
+<footer class="footer">
+  <p id="footerText">Brewtendo is a fan project. Not affiliated with Nintendo. Just some people who miss the 3DS.</p>
+  <div class="footer-links">
+    <a id="footerGithub" href="https://github.com/Brewtendo/brewtendo.github.io">GitHub</a>
+    <a id="footerPrivacy" href="#">Privacy</a>
+    <a id="footerTerms" href="#">Terms</a>
+  </div>
+</footer>
 
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            sidebarOverlay.classList.remove('open');
-        });
+<script>
+// language dropdown toggle & translations
+const languageBtn = document.getElementById('languageBtn');
+const languageDropdown = document.getElementById('languageDropdown');
+const langOptions = document.querySelectorAll('.language-option');
 
-        languageBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            languageDropdown.classList.toggle('show');
-        });
+languageBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isOpen = languageDropdown.classList.toggle('show');
+  languageBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  languageDropdown.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+});
 
-        document.addEventListener('click', (e) => {
-            if (!languageBtn.contains(e.target) && !languageDropdown.contains(e.target)) {
-                languageDropdown.classList.remove('show');
-            }
-        });
+document.addEventListener('click', (e) => {
+  if (!languageBtn.contains(e.target) && !languageDropdown.contains(e.target)) {
+    languageDropdown.classList.remove('show');
+    languageBtn.setAttribute('aria-expanded', 'false');
+    languageDropdown.setAttribute('aria-hidden', 'true');
+  }
+});
 
-        const translations = {
-            en: {
-                menuText: "Menu",
-                languageText: "Language",
-                searchBar: "Search",
-                sidebarNavTitle: "NAVIGATION",
-                sidebarHome: "Home",
-                sidebarGuide: "Installation Guide",
-                sidebarSupport: "Support",
-                sidebarResourcesTitle: "RESOURCES",
-                sidebarGithub: "GitHub Repository",
-                sidebarFaq: "FAQ",
-                pageTitle: "Installation Guide",
-                pageSubtitle: "Get your 3DS back online in about 10 minutes. No experience needed.",
-                warningTitle: "Important Notice",
-                warningText: "Brewtendo is not affiliated with WiiMart, or Nintendo. This is a fan-ran project, and we do not have connections with Nintendo. Make sure to disconnect from Pretendo as well in order for Brewtendo to work. This guide will be updated if any new information or changes come.",
-                step1Title: "Homebrew your 3DS",
-                step1Subtitle: "Install Custom Firmware",
-                step1Text2: "and follow the full guide to homebrew your 3DS. This is crucial, as without it, this mod will NOT work.",
-                step2Title: "Open Luma3DS Settings",
-                step2Subtitle: "Configure Luma3DS",
-                step2Text1: "Turn off your console if not already.",
-                step2Text2: "Hold select and power it on.",
-                step2Text3: "Once you do that, enable these two options:",
-                step2Option1: '"Enable game patching"',
-                step2Option2: '"Enable loading external firms and modules"',
-                step2Text4: "Once you do that, save and reboot.",
-                step3Title: "Get the IPS File",
-                step3Subtitle: "Download the patch",
-                step3Text: "Download the IPS file that's attached below, as well as refer to the connection guide.",
-                step4Title: "Copy the IPS file",
-                step4Subtitle: "Install to SD Card",
-                step4Text1: "Take out your 3DS SD Card and plug it into your PC.",
-                step4Text2: "Go to this path:",
-                step4Text3: "Copy the .ips file here into that folder.",
-                step4Text4: "If it asks to replace any files, make sure to click Replace.",
-                step4Tip: "If you don't have a sysmodules folder, create one inside the luma folder.",
-                step5Title: "Set up the proxy",
-                step5Subtitle: "Configure Network Settings",
-                step5Text1: "Put the SD Card back into your 3DS.",
-                step5Text2: "Turn on your system. It should be on the HOME Menu. If so, navigate to and open System Settings → Internet Settings → Connection Settings.",
-                step5Text3: "Select your active connection, then hit Change Settings.",
-                step5Text4: "Scroll until you find Proxy Settings.",
-                step5Text5: "Choose Yes, then select Detailed Setup.",
-                step5Text6: "Enter the Proxy Server into the Proxy Server spot, and enter the Port in the Port spot.",
-                step5Text7: "Click OK → Save Settings → Test Connection.",
-                step5Text8: "If it says the connection test was successful, you're good to go.",
-                step6Title: "Done!",
-                step6Subtitle: "Connect to Brewtendo",
-                step6Text: "If it's successful, you should be good! Now just exit System Settings, navigate to \"Nintendo eShop\" on your HOME Menu, and launch it. If it loads and you see the original categories, and games on sale, then congratulations, you are now logged into the Brewtendo servers! We can't wait to have you!",
-                nextStepsTitle: "You're all set!",
-                nextStepsText: "Your 3DS is back online. Time to catch up on what you missed.",
-                homeBtn: "Back to Home",
-                supportBtn: "Get Support",
-                footerText: "Brewtendo is a fan project. Not affiliated with Nintendo. Just some people who miss the 3DS.",
-                footerGithub: "GitHub",
-                footerPrivacy: "Privacy",
-                footerTerms: "Terms"
-            },
-            es: {
-                menuText: "Menú",
-                languageText: "Idioma",
-                searchBar: "Buscar",
-                sidebarNavTitle: "NAVEGACIÓN",
-                sidebarHome: "Inicio",
-                sidebarGuide: "Guía de Instalación",
-                sidebarSupport: "Soporte",
-                sidebarResourcesTitle: "RECURSOS",
-                sidebarGithub: "Repositorio de GitHub",
-                sidebarFaq: "Preguntas Frecuentes",
-                pageTitle: "Guía de Instalación",
-                pageSubtitle: "Conecta tu 3DS en aproximadamente 10 minutos. No se necesita experiencia.",
-                warningTitle: "Aviso Importante",
-                warningText: "Brewtendo no está afiliado a WiiMart ni a Nintendo. Este es un proyecto de fans, y no tenemos conexiones con Nintendo. Asegúrate de desconectarte de Pretendo para que Brewtendo funcione. Esta guía se actualizará si hay alguna información nueva o cambios.",
-                step1Title: "Libera tu 3DS",
-                step1Subtitle: "Instalar Custom Firmware",
-                step1Text2: "y sigue la guía completa para hackear tu consola. Esto es crucial, ya que sin un hackeo, esta modificación NO funcionará.",
-                step2Title: "Abrir la configuración de Luma3DS",
-                step2Subtitle: "Configurar Luma3DS",
-                step2Text1: "Apaga tu consola si aún no lo has hecho.",
-                step2Text2: "Mantén L + DPad abajo + Select mientras enciendes la consola, luego se te mostrará la configuración de Luma.",
-                step2Text3: "Una vez que lo hagas, habilita estas dos opciones:",
-                step2Option1: '"Habilitar parches de juegos" (Enable game patching)',
-                step2Option2: '"Habilitar la carga de firms y módulos externos" (Enable loading external firms and modules)',
-                step2Text4: "Una vez que lo hagas, guarda y reinicia la consola.",
-                step3Title: "Descargar el archivo IPS",
-                step3Subtitle: "Descargar el parche",
-                step3Text: "Descarga el archivo IPS que se adjunta abajo, manténlo en un lugar seguro como el escritorio para copiarlo después.",
-                step4Title: "Copiar el archivo IPS",
-                step4Subtitle: "Instalar a la tarjeta SD",
-                step4Text1: "Saca tu tarjeta SD de tu consola y conéctala a tu PC.",
-                step4Text2: "Ve a esta ruta:",
-                step4Text3: "Copia el archivo .ips en esa carpeta.",
-                step4Text4: "Si te pide reemplazar archivos, asegúrate de hacer clic en Reemplazar.",
-                step4Tip: "Si no tienes una carpeta sysmodules, crea una dentro de la carpeta luma.",
-                step5Title: "Configurar el proxy",
-                step5Subtitle: "Configurar ajustes de red",
-                step5Text1: "Vuelve a poner la tarjeta SD en tu 3DS.",
-                step5Text2: "Enciende tu consola. Debería estar en el menú HOME. Si es así, ve y abre Configuración del sistema → Configuración de Internet → Configuración de conexión.",
-                step5Text3: "Selecciona tu conexión activa y pulsa Cambiar configuración.",
-                step5Text4: "Desplázate hasta encontrar Configuración del proxy.",
-                step5Text5: "Elige Sí y luego selecciona Configuración detallada.",
-                step5Text6: "Introduce el servidor proxy en el lugar del servidor proxy y el puerto en el lugar del puerto.",
-                step5Text7: "Haz clic en Aceptar → Guardar configuración → Prueba de conexión.",
-                step5Text8: "Si dice que la prueba de conexión fue exitosa, estás listo.",
-                step6Title: "¡Hecho!",
-                step6Subtitle: "Conectar a Brewtendo",
-                step6Text: "Si tiene éxito, ¡ya está listo! Ahora simplemente sal de Configuración del sistema, ve a \"Nintendo eShop\" en tu menú HOME y ábrelo. Si carga y ves las categorías originales y los juegos en venta, entonces felicidades, ¡ahora estás conectado a los servidores de Brewtendo! ¡No podemos esperar a tenerte con nosotros!",
-                nextStepsTitle: "¡Todo listo!",
-                nextStepsText: "Tu 3DS está de vuelta en línea. Es hora de ponerte al día con lo que te perdiste.",
-                homeBtn: "Volver al inicio",
-                supportBtn: "Obtener soporte",
-                footerText: "Brewtendo es un proyecto de fans. No está afiliado a Nintendo. Solo algunas personas que extrañan la 3DS.",
-                footerGithub: "GitHub",
-                footerPrivacy: "Privacidad",
-                footerTerms: "Términos"
-            }
-        };
-
-        let currentLang = 'en';
-
-        document.querySelectorAll('.language-option').forEach(option => {
-            option.addEventListener('click', () => {
-                const lang = option.dataset.lang;
-                if (lang !== currentLang) {
-                    currentLang = lang;
-                    updateLanguage(lang);
-
-                    document.querySelectorAll('.language-option').forEach(opt => {
-                        opt.classList.remove('active');
-                    });
-                    option.classList.add('active');
-                }
-                languageDropdown.classList.remove('show');
-            });
-        });
-
-        function updateLanguage(lang) {
-            const t = translations[lang];
-            Object.keys(t).forEach(key => {
-                const element = document.getElementById(key);
-                if (element) {
-                    if (element.tagName === 'INPUT') {
-                        element.placeholder = t[key];
-                    } else {
-                        element.textContent = t[key];
-                    }
-                }
-            });
-        }
-    </script>
+langOptions.forEach(opt => {
+  opt.addEventListener('click', () => {
+    langOptions.forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    const lang = opt.dataset.lang;
+    if (lang === 'en') {
+      document.getElementById('languageText').textContent = 'Language';
+    } else if (lang === 'es') {
+      document.getElementById('languageText').textContent = 'Idioma';
+    }
+    languageDropdown.classList.remove('show');
+  });
+});
+</script>
 </body>
 </html>
