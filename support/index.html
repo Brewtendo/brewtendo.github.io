@@ -43,6 +43,49 @@ body{
     position:sticky;
     top:0;
     z-index:1000;
+    /* Language button (no icon) */
+.language-btn{
+    background: linear-gradient(to bottom,#ffaa55 0%,#ff8822 100%);
+    border:2px solid rgba(255,255,255,0.35);
+    border-bottom-color: rgba(0,0,0,0.15);
+    padding:6px 12px;
+    border-radius:20px;
+    color:white;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 2px 5px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.25);
+    display:inline-flex;align-items:center;gap:8px;text-shadow:0 1px 2px rgba(0,0,0,0.3);
+    transition:transform .12s ease,box-shadow .12s ease;
+    font-family:'RodinBold','Rodin',Arial,sans-serif;
+}
+.language-btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,0.28)}
+
+/* Dropdown with emoji flags */
+.language-dropdown{
+    position:absolute;
+    right:12px;
+    top:58px;
+    background:white;
+    border-radius:12px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.15);
+    overflow:hidden;
+    opacity:0;
+    transform:translateY(-6px) scale(.98);
+    transform-origin:top right;
+    transition:opacity 180ms ease, transform 180ms cubic-bezier(.2,.9,.2,1);
+    z-index:1001;
+    min-width:180px;
+    pointer-events:none;
+}
+.language-dropdown.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.language-option{
+    display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:14px;font-weight:700;color:#444;cursor:pointer;
+}
+.language-option:hover{background:#fff5e6;color:#ff6600}
+.language-emoji{
+    font-size:20px; /* emoji flag size */
+    line-height:1;
 }
 .top-left{display:flex;align-items:center;gap:12px}
 .top-logo{width:44px;height:44px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.2)}
