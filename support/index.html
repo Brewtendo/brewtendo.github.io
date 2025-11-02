@@ -51,52 +51,8 @@ body{
 .nav-links{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .nav-links a{color:white;text-decoration:none;font-weight:700;padding:8px 12px;border-radius:10px;transition:background .15s ease,transform .12s ease;font-family:'RodinBold','Rodin',Arial,sans-serif}
 .nav-links a:hover{background:rgba(255,255,255,0.12);transform:translateY(-2px)}
-
-/* Language button (no icon) */
-.language-btn{
-    background: linear-gradient(to bottom,#ffaa55 0%,#ff8822 100%);
-    border:2px solid rgba(255,255,255,0.35);
-    border-bottom-color: rgba(0,0,0,0.15);
-    padding:6px 12px;
-    border-radius:20px;
-    color:white;
-    font-size:13px;
-    font-weight:700;
-    cursor:pointer;
-    box-shadow:0 2px 5px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.25);
-    display:inline-flex;align-items:center;gap:8px;text-shadow:0 1px 2px rgba(0,0,0,0.3);
-    transition:transform .12s ease,box-shadow .12s ease;
-    font-family:'RodinBold','Rodin',Arial,sans-serif;
-}
-.language-btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(0,0,0,0.28)}
-
-/* Dropdown with emoji flags */
-.language-dropdown{
-    position:absolute;
-    right:12px;
-    top:58px;
-    background:white;
-    border-radius:12px;
-    box-shadow:0 12px 30px rgba(0,0,0,0.15);
-    overflow:hidden;
-    opacity:0;
-    transform:translateY(-6px) scale(.98);
-    transform-origin:top right;
-    transition:opacity 180ms ease, transform 180ms cubic-bezier(.2,.9,.2,1);
-    z-index:1001;
-    min-width:180px;
-    pointer-events:none;
-}
-.language-dropdown.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
-.language-option{
-    display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:14px;font-weight:700;color:#444;cursor:pointer;
-}
-.language-option:hover{background:#fff5e6;color:#ff6600}
-.language-emoji{
-    font-size:20px; /* emoji flag size */
-    line-height:1;
-}
-
+    }
+    
 /* Page container & content */
 .container{max-width:900px;margin:0 auto;padding:30px 20px}
 .page-header{background:linear-gradient(to bottom,#ffffff 0%,#fff8f0 100%);border-radius:16px;padding:35px;margin-bottom:25px;box-shadow:0 4px 10px rgba(0,0,0,0.15);border:3px solid rgba(255,255,255,0.8);text-align:center}
